@@ -1,0 +1,198 @@
+<div class="container dashboard-container">
+  <div class="dept-header-banner">
+    <div>
+      <span class="dept-badge">DEPARTMENT DASHBOARD</span>
+      <h1>{{ deptName }}</h1>
+      <p>Identify, prioritize, manage, and resolve civic complaints with mandatory before/after photo proof.</p>
+    </div>
+    <a routerLink="/admin/analytics" class="btn btn-outline">📈 View Analytics</a>
+  </div>
+
+  <!-- Metric Cards Grid -->
+  <div class="grid-4 metrics-grid">
+    <div class="metric-card">
+      <div class="metric-val text-primary">{{ metrics.newIssues }}</div>
+      <div class="metric-lbl">New Issues</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val text-warning">{{ metrics.inProgress }}</div>
+      <div class="metric-lbl">In Progress</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val text-danger">{{ metrics.critical }}</div>
+      <div class="metric-lbl">Critical Priority</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val text-success">{{ metrics.resolved }}</div>
+      <div class="metric-lbl">Resolved</div>
+    </div>
+  </div>
+
+  <!-- Toolbar & Filters -->
+  <div class="glass-card table-toolbar">
+    <div class="search-input">
+      <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="applyFilters()" class="form-control" placeholder="Search complaint #, citizen name, address..." />
+    </div>
+
+    <div class="filter-group">
+      <select [(ngModel)]="statusFilter" (change)="loadComplaints()" class="form-control">
+        <option value="">All Statuses</option>
+        <option value="SUBMITTED">Submitted</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="RESOLVED">Resolved</option>
+        <option value="VERIFIED">Verified</option>
+        <option value="RESOLUTION_DISPUTED">Resolution Disputed</option>
+        <option value="DUPLICATE">Duplicate</option>
+        <option value="FALSE_SPAM">False / Spam</option>
+      </select>
+
+      <select [(ngModel)]="priorityFilter" (change)="loadComplaints()" class="form-control">
+        <option value="">All Priorities</option>
+        <option value="CRITICAL">Critical</option>
+        <option value="HIGH">High</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="LOW">Low</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Complaints Data Table -->
+  <div class="glass-card table-card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID & Date</th>
+          <th>Category & Details</th>
+          <th>Location</th>
+          <th>Citizen Info</th>
+          <th>Priority & Score</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredComplaints" [class.disputed-row]="item.status === 'RESOLUTION_DISPUTED'">
+          <td>
+            <a [routerLink]="['/complaint', item.id]" class="cid-link">{{ item.complaintNumber }}</a>
+            <div class="sub-date">{{ item.createdAt | date:'dd MMM, hh:mm a' }}</div>
+            <span *ngIf="item.isVoiceReport" class="voice-tag">🎙️ Voice</span>
+          </td>
+          <td>
+            <div class="cat-name">{{ item.categoryName }}</div>
+            <div class="desc-preview">{{ item.description }}</div>
+          </td>
+          <td>
+            <div class="addr-text">{{ item.address }}</div>
+          </td>
+          <td>
+            <div class="citizen-name">{{ item.citizenName }}</div>
+            <div class="citizen-mob">{{ item.citizenMobile }}</div>
+            <button (click)="openBlockUser(item)" class="risk-btn">🛡️ Risk Score</button>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="'badge-' + item.priority.toLowerCase()">
+              {{ item.priority }} ({{ item.priorityScore }}/100)
+            </span>
+          </td>
+          <td>
+            <select [ngModel]="item.status" (ngModelChange)="updateStatus(item, $event)" class="status-select" [ngClass]="'badge-' + item.status.toLowerCase().replace('_', '-')">
+              <option value="SUBMITTED">SUBMITTED</option>
+              <option value="ACKNOWLEDGED">ACKNOWLEDGED</option>
+              <option value="IN_PROGRESS">IN_PROGRESS</option>
+              <option value="RESOLVED">RESOLVED</option>
+              <option value="REJECTED">REJECTED</option>
+            </select>
+          </td>
+          <td>
+            <div class="action-btns">
+              <button *ngIf="item.status !== 'RESOLVED' && item.status !== 'VERIFIED'" (click)="openResolve(item)" class="btn btn-accent btn-xs">
+                ✨ Resolve (Photo Proof)
+              </button>
+              <button (click)="openFlag(item)" class="btn btn-outline btn-xs btn-flag">
+                🚩 Flag Spam
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mandatory Resolution Modal -->
+  <div *ngIf="showResolveModal" class="modal-overlay">
+    <div class="modal-content resolve-modal">
+      <h2>✨ Provide Resolution Proof (Mandatory)</h2>
+      <p class="subtitle">Enter resolution details and upload compulsory after-resolution photograph before marking resolved.</p>
+
+      <div class="form-group">
+        <label>Resolution Message / Work Done *</label>
+        <textarea [(ngModel)]="resolutionMessage" rows="3" class="form-control" placeholder="Describe repair work, parts replaced, or action taken..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>After-Resolution Photograph Proof * (Mandatory)</label>
+        <input type="file" (change)="onAfterPhotoSelected($event)" accept="image/*" class="form-control" required />
+        <img *ngIf="afterPhotoPreview" [src]="afterPhotoPreview" class="after-preview" />
+      </div>
+
+      <div class="modal-actions">
+        <button (click)="submitResolution()" class="btn btn-accent flex-1" [disabled]="!resolutionMessage || !afterPhotoBase64">
+          ✓ MARK RESOLVED WITH PROOF
+        </button>
+        <button (click)="showResolveModal = false" class="btn btn-outline">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flag Spam Modal -->
+  <div *ngIf="showFlagModal" class="modal-overlay">
+    <div class="modal-content">
+      <h2>🚩 Flag Complaint</h2>
+      <div class="form-group">
+        <label>Flag Type:</label>
+        <select [(ngModel)]="flagType" class="form-control">
+          <option value="SPAM">Spam / Unrelated</option>
+          <option value="FALSE_PHOTO">False / Fake Photo</option>
+          <option value="LOCATION_MISMATCH">Location Mismatch</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Reason *</label>
+        <textarea [(ngModel)]="flagReason" rows="3" class="form-control" placeholder="Specify reason..." required></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button (click)="submitFlag()" class="btn btn-danger" [disabled]="!flagReason">Flag & Mark False</button>
+        <button (click)="showFlagModal = false" class="btn btn-outline">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Reliability & Block Modal -->
+  <div *ngIf="showBlockModal && userRiskData" class="modal-overlay">
+    <div class="modal-content">
+      <h2>🛡️ Citizen Reliability & Risk Assessment</h2>
+      <div class="risk-card">
+        <p>Citizen: <strong>{{ userRiskData.userName }}</strong> ({{ userRiskData.userMobile }})</p>
+        <p>Total Submitted: <strong>{{ userRiskData.totalSubmitted }}</strong></p>
+        <p>Verified Complaints: <strong>{{ userRiskData.verifiedCount }}</strong></p>
+        <p>False/Spam Reports: <strong>{{ userRiskData.falseSpamCount }}</strong></p>
+        <p>Reliability Score: <strong>{{ userRiskData.reliabilityScore }}%</strong></p>
+        <p>Risk Level: <span class="badge" [ngClass]="'badge-' + userRiskData.risk_level.toLowerCase()">{{ userRiskData.risk_level }}</span></p>
+      </div>
+
+      <div class="form-group mt-3">
+        <label>Block Reason (If blocking user):</label>
+        <textarea [(ngModel)]="blockReason" rows="2" class="form-control" placeholder="Enter reason for blocking citizen..."></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button (click)="submitBlockUser()" class="btn btn-danger" [disabled]="!blockReason">
+          🚫 BLOCK CITIZEN
+        </button>
+        <button (click)="showBlockModal = false" class="btn btn-outline">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

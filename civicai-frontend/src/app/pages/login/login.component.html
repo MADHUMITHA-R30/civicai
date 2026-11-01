@@ -1,0 +1,59 @@
+<div class="container login-container">
+  <div class="glass-card login-card">
+    <div class="login-header">
+      <div class="login-logo">🏛️</div>
+      <h2>Log In to CivicAI</h2>
+      <p>Access your citizen portal or department administration dashboard</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-banner">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+    <form (ngSubmit)="login()">
+      <div class="form-group">
+        <label>Email Address or Mobile Number</label>
+        <input type="text" [(ngModel)]="identifier" name="identifier" class="form-control" placeholder="e.g. citizen@example.com or 9876543210" required />
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" [(ngModel)]="password" name="password" class="form-control" placeholder="••••••••" required />
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg w-100" [disabled]="isLoading || !identifier || !password">
+        <span *ngIf="!isLoading">SIGN IN</span>
+        <span *ngIf="isLoading">Verifying credentials...</span>
+      </button>
+    </form>
+
+    <div class="register-prompt">
+      Don't have an account? <a routerLink="/register">Register as a Citizen</a>
+    </div>
+
+    <!-- Quick Demo Logins Section for Evaluation -->
+    <div class="demo-logins-box">
+      <h4>🔑 Quick Demo Accounts (1-Tap Test)</h4>
+      <div class="demo-grid">
+        <button (click)="quickLogin('citizen@example.com', 'citizen123')" class="demo-btn citizen-demo">
+          👤 Citizen Login
+        </button>
+        <button (click)="quickLogin('electrical@example.com', 'admin123')" class="demo-btn elec-demo">
+          ⚡ Electrical Admin
+        </button>
+        <button (click)="quickLogin('roads@example.com', 'admin123')" class="demo-btn roads-demo">
+          🛣️ Roads Admin
+        </button>
+        <button (click)="quickLogin('water@example.com', 'admin123')" class="demo-btn water-demo">
+          🚰 Water Admin
+        </button>
+        <button (click)="quickLogin('sanitation@example.com', 'admin123')" class="demo-btn san-demo">
+          🧹 Sanitation Admin
+        </button>
+        <button (click)="quickLogin('admin@example.com', 'admin123')" class="demo-btn super-demo">
+          ⚙️ Super Admin
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

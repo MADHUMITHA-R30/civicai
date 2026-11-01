@@ -1,0 +1,50 @@
+<header class="navbar-header">
+  <div class="navbar-container">
+    <a routerLink="/" class="brand">
+      <div class="brand-logo">🏛️</div>
+      <div class="brand-text">
+        <span class="brand-title">Civic<span class="brand-ai">AI</span></span>
+        <span class="brand-tagline">Report. Track. Resolve.</span>
+      </div>
+    </a>
+
+    <nav class="nav-links">
+      <!-- Citizen Links -->
+      <ng-container *ngIf="auth.currentUser()?.role === 'ROLE_CITIZEN' || !auth.isLoggedIn()">
+        <a routerLink="/citizen-home" routerLinkActive="active" class="nav-item">🏠 Home</a>
+        <a routerLink="/report" routerLinkActive="active" class="nav-item">📝 Report Problem</a>
+        <a routerLink="/my-reports" routerLinkActive="active" class="nav-item">📊 My Reports</a>
+      </ng-container>
+
+      <!-- Department Admin Links -->
+      <ng-container *ngIf="auth.currentUser()?.role === 'ROLE_DEPARTMENT_ADMIN'">
+        <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">📋 Department Dashboard</a>
+        <a routerLink="/admin/analytics" routerLinkActive="active" class="nav-item">📈 Department Analytics</a>
+      </ng-container>
+
+      <!-- Super Admin Links -->
+      <ng-container *ngIf="auth.currentUser()?.role === 'ROLE_SUPER_ADMIN'">
+        <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">🌐 All Complaints</a>
+        <a routerLink="/super-admin" routerLinkActive="active" class="nav-item">⚙️ Admin Console</a>
+        <a routerLink="/admin/analytics" routerLinkActive="active" class="nav-item">📈 City Analytics</a>
+      </ng-container>
+    </nav>
+
+    <div class="nav-user-actions">
+      <ng-container *ngIf="auth.currentUser() as user; else guestTpl">
+        <div class="user-pill">
+          <span class="user-name">{{ user.name }}</span>
+          <span class="role-badge" [class.badge-admin]="user.role !== 'ROLE_CITIZEN'">
+            {{ user.departmentName || (user.role === 'ROLE_SUPER_ADMIN' ? 'Super Admin' : 'Citizen') }}
+          </span>
+        </div>
+        <button (click)="logout()" class="btn btn-outline btn-sm">Sign Out</button>
+      </ng-container>
+
+      <ng-template #guestTpl>
+        <a routerLink="/login" class="btn btn-outline">Log In</a>
+        <a routerLink="/register" class="btn btn-primary">Register</a>
+      </ng-template>
+    </div>
+  </div>
+</header>

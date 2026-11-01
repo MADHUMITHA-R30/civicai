@@ -1,0 +1,66 @@
+<div class="container reports-container">
+  <div class="page-header">
+    <h1>📋 My Reported Issues</h1>
+    <p>Track progress, status timelines, and before/after resolution proof for your submitted complaints.</p>
+  </div>
+
+  <!-- Filter & Search Toolbar -->
+  <div class="glass-card toolbar-card">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="applyFilters()"
+        placeholder="Search complaint ID, location, or issue description..."
+        class="form-control"
+      />
+    </div>
+
+    <div class="filter-pills">
+      <button class="pill-btn" [class.active]="statusFilter === 'ALL'" (click)="statusFilter = 'ALL'; applyFilters()">All</button>
+      <button class="pill-btn" [class.active]="statusFilter === 'SUBMITTED'" (click)="statusFilter = 'SUBMITTED'; applyFilters()">Submitted</button>
+      <button class="pill-btn" [class.active]="statusFilter === 'IN_PROGRESS'" (click)="statusFilter = 'IN_PROGRESS'; applyFilters()">In Progress</button>
+      <button class="pill-btn" [class.active]="statusFilter === 'RESOLVED'" (click)="statusFilter = 'RESOLVED'; applyFilters()">Resolved</button>
+      <button class="pill-btn" [class.active]="statusFilter === 'VERIFIED'" (click)="statusFilter = 'VERIFIED'; applyFilters()">Verified</button>
+    </div>
+  </div>
+
+  <!-- Complaint Cards Grid -->
+  <div *ngIf="filteredComplaints.length > 0; else emptyTpl" class="grid-2 cards-grid">
+    <div *ngFor="let item of filteredComplaints" class="glass-card report-card">
+      <div class="card-top">
+        <span class="complaint-code">{{ item.complaintNumber }}</span>
+        <span class="badge" [ngClass]="'badge-' + item.status.toLowerCase().replace('_', '-')">
+          {{ item.status }}
+        </span>
+      </div>
+
+      <h3 class="category-title">{{ item.categoryName }}</h3>
+      <p class="description-text">{{ item.description }}</p>
+
+      <div class="location-row">
+        📍 <strong>Location:</strong> {{ item.address }}
+      </div>
+
+      <div class="meta-row">
+        <span>Assigned: <strong>{{ item.departmentName }}</strong></span>
+        <span>Reported: <strong>{{ item.createdAt | date:'dd MMM yyyy' }}</strong></span>
+      </div>
+
+      <div class="card-footer">
+        <a [routerLink]="['/complaint', item.id]" class="btn btn-outline flex-1">
+          🔍 VIEW DETAILS & TIMELINE
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyTpl>
+    <div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <h3>No Complaint Reports Found</h3>
+      <p>You haven't submitted any civic complaints matching this filter yet.</p>
+      <a routerLink="/report" class="btn btn-primary mt-3">📝 Report a New Problem</a>
+    </div>
+  </ng-template>
+</div>

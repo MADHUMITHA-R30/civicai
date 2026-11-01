@@ -1,0 +1,154 @@
+.dashboard-container {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+.dept-header-banner {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+}
+
+.dept-badge {
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: var(--primary);
+  letter-spacing: 0.05em;
+}
+
+.metrics-grid {
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.metric-val {
+  font-size: 2.4rem;
+  font-weight: 800;
+}
+
+.metric-lbl {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.text-primary { color: #2563eb; }
+.text-warning { color: #d97706; }
+.text-danger { color: #dc2626; }
+.text-success { color: #059669; }
+
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.search-input { flex: 1; }
+.filter-group { display: flex; gap: 0.75rem; }
+
+.table-card {
+  padding: 0;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.data-table th, .data-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: top;
+}
+
+.data-table th {
+  background: #f8fafc;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.cid-link {
+  font-family: monospace;
+  font-weight: 800;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.sub-date { font-size: 0.75rem; color: var(--text-muted); }
+.voice-tag { background: #f3e8ff; color: #7c3aed; font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 8px; font-weight: bold; }
+
+.cat-name { font-weight: 700; }
+.desc-preview { font-size: 0.85rem; color: var(--text-muted); max-width: 250px; }
+
+.status-select {
+  padding: 0.35rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 1px solid var(--border-color);
+}
+
+.action-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.btn-xs {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.risk-btn {
+  background: none;
+  border: none;
+  color: #7c3aed;
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 0.25rem;
+}
+
+.disputed-row {
+  background: #fef2f2;
+}
+
+.after-preview {
+  max-height: 160px;
+  border-radius: var(--radius-md);
+  margin-top: 0.5rem;
+}
+
+.risk-card {
+  background: #f8fafc;
+  border: 1.5px solid var(--border-color);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}

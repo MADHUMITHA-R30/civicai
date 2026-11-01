@@ -1,0 +1,114 @@
+<div class="container report-container">
+  <div class="page-header">
+    <h1>📝 Report a Civic Problem</h1>
+    <p>Provide details and photographs of the civic issue in your neighborhood.</p>
+  </div>
+
+  <div class="glass-card form-card">
+    <form (ngSubmit)="submitComplaint()">
+      <!-- Category Dropdown -->
+      <div class="form-group">
+        <label for="category">1. Issue Category *</label>
+        <select id="category" [(ngModel)]="form.categoryId" name="categoryId" class="form-control" required>
+          <option *ngFor="let cat of categories" [value]="cat.id">
+            {{ cat.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Problem Description -->
+      <div class="form-group">
+        <label for="description">2. Problem Description *</label>
+        <textarea
+          id="description"
+          [(ngModel)]="form.description"
+          name="description"
+          rows="4"
+          class="form-control"
+          placeholder="Example: Street light near the school entrance has not been working for three days."
+          (blur)="onDescriptionBlur()"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Location / Address -->
+      <div class="form-group">
+        <div class="label-row">
+          <label for="address">3. Location / Address *</label>
+          <button type="button" (click)="useCurrentLocation()" class="location-btn">
+            📍 Use My Current Location
+          </button>
+        </div>
+        <input
+          type="text"
+          id="address"
+          [(ngModel)]="form.address"
+          name="address"
+          class="form-control"
+          placeholder="Enter street name, landmark, or area name"
+          required
+        />
+      </div>
+
+      <!-- Contact Phone Number -->
+      <div class="form-group">
+        <label for="contact">4. Contact Mobile Number</label>
+        <input
+          type="tel"
+          id="contact"
+          [(ngModel)]="form.contactNumber"
+          name="contactNumber"
+          class="form-control"
+          placeholder="10-digit mobile number"
+        />
+      </div>
+
+      <!-- Photograph Upload -->
+      <div class="form-group">
+        <label>5. Upload Issue Photograph (Optional)</label>
+        <div class="file-upload-box">
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" id="photoInput" class="file-input" />
+          <label for="photoInput" class="upload-dropzone">
+            <div class="upload-icon">📷</div>
+            <span *ngIf="!imagePreview">Tap to capture or upload photo</span>
+            <img *ngIf="imagePreview" [src]="imagePreview" class="photo-preview" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit Action -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-lg flex-1" [disabled]="isSubmitting || !form.description || !form.address">
+          <span *ngIf="!isSubmitting">🚀 SUBMIT CIVIC REPORT</span>
+          <span *ngIf="isSubmitting">⏳ Analyzing with AI...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Duplicate Complaint Alert Modal -->
+  <div *ngIf="showDuplicateAlert && possibleDuplicate" class="modal-overlay">
+    <div class="modal-content duplicate-modal">
+      <div class="modal-badge">⚠️ POSSIBLE DUPLICATE DETECTED</div>
+      <h2>A Similar Issue Already Exists Nearby</h2>
+      <p class="subtitle">AI detected that another citizen recently reported a similar problem at this location.</p>
+
+      <div class="existing-issue-box">
+        <div class="issue-tag">{{ possibleDuplicate.complaint_number }}</div>
+        <h3>{{ possibleDuplicate.category_name }}</h3>
+        <p>📍 <strong>Location:</strong> {{ possibleDuplicate.address }}</p>
+        <p>⚡ <strong>Status:</strong> <span class="badge badge-in-progress">{{ possibleDuplicate.status }}</span></p>
+        <p class="sim-score">AI Similarity Score: <strong>{{ (possibleDuplicate.similarity_score * 100).toFixed(0) }}%</strong></p>
+      </div>
+
+      <div class="modal-actions">
+        <a [routerLink]="['/complaint', possibleDuplicate.complaint_id]" class="btn btn-primary">
+          🔍 VIEW EXISTING ISSUE & TRACK
+        </a>
+        <button (click)="showDuplicateAlert = false" class="btn btn-outline">
+          Report Separately Anyway
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

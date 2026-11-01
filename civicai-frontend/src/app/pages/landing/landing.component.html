@@ -1,0 +1,110 @@
+<div class="landing-page">
+  <!-- Hero Banner -->
+  <section class="hero-section">
+    <div class="container hero-container">
+      <div class="hero-badge">✨ AI-Powered Civic Governance Platform</div>
+      <h1 class="hero-title">Report. Track. Resolve.</h1>
+      <p class="hero-subtitle">
+        An intelligent civic platform connecting citizens and municipal departments to solve local infrastructure and public problems faster with AI voice assistance and transparent before/after verification.
+      </p>
+
+      <div class="hero-actions">
+        <button (click)="showVoiceModal = true" class="btn btn-voice">
+          🎙️ REPORT USING VOICE
+        </button>
+        <a routerLink="/report" class="btn btn-primary btn-lg">
+          📝 REPORT A PROBLEM
+        </a>
+        <a routerLink="/my-reports" class="btn btn-outline btn-lg">
+          📊 TRACK MY REPORT
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-section">
+    <div class="container">
+      <h2 class="section-title">How CivicAI Works</h2>
+      <div class="workflow-steps">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Report Problem</h3>
+          <p>Submit text, photos, or natural voice complaints easily.</p>
+        </div>
+        <div class="step-arrow">➔</div>
+
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>AI Engine Understands</h3>
+          <p>Extracts category, address, detects duplicates, & prioritizes severity.</p>
+        </div>
+        <div class="step-arrow">➔</div>
+
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Department Resolves</h3>
+          <p>Official inspects, repairs, and uploads compulsory after-resolution photo.</p>
+        </div>
+        <div class="step-arrow">➔</div>
+
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <h3>Citizen Verifies</h3>
+          <p>Compare before/after photos and verify or dispute resolution.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Why CivicAI?</h2>
+      <div class="grid-3">
+        <div class="feature-card">
+          <div class="feature-icon">🎙️</div>
+          <h3>Voice-to-Text Reporting</h3>
+          <p>Designed for low literacy citizens. Speak naturally in simple words; AI transcribes and extracts details automatically.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Semantic Duplicate Detection</h3>
+          <p>AI identifies similar complaints nearby, links them into issue clusters CIV-2026-XXXX, preventing duplicate municipal workload.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Explainable Priority AI</h3>
+          <p>Calculates severity score (0-100) based on location near school/hospital, hazard level, duration, and safety impact.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📸</div>
+          <h3>Before/After Proof</h3>
+          <p>Department officials must upload after-resolution photos before marking issues resolved. Interactive slider comparison.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>Citizen Verification Layer</h3>
+          <p>Citizens verify if the problem was actually fixed. Disputed resolutions trigger auto-alerts back to officials.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Recurring Hotspot Analytics</h3>
+          <p>Identifies recurring problem areas over months and recommends permanent infrastructure intervention.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Voice Modal -->
+  <app-voice-report-modal
+    *ngIf="showVoiceModal"
+    (close)="showVoiceModal = false"
+    (complaintConfirmed)="onVoiceConfirmed($event)"
+  ></app-voice-report-modal>
+</div>

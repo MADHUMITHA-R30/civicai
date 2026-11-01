@@ -1,0 +1,45 @@
+.sa-container {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+.sa-badge {
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: #7c3aed;
+}
+
+.mb-4 { margin-bottom: 2rem; }
+.mt-3 { margin-top: 1rem; }
+
+.dept-grid {
+  margin-top: 1rem;
+}
+
+.dept-card {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.dept-code {
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: var(--primary);
+}
+
+.dept-card h4 {
+  margin: 0.25rem 0 0.5rem;
+}
+
+.dept-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}

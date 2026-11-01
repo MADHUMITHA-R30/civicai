@@ -1,0 +1,50 @@
+<div class="container citizen-home-container">
+  <div class="welcome-header">
+    <h1>Welcome, {{ auth.currentUser()?.name || 'Citizen' }}! 👋</h1>
+    <p>How can we help resolve your neighborhood problem today?</p>
+  </div>
+
+  <!-- Primary Voice Banner -->
+  <div class="voice-banner">
+    <div class="voice-banner-content">
+      <h2>🎙️ Voice Complaint Assistant</h2>
+      <p>Having trouble typing or reading? Press the button and speak your problem naturally!</p>
+    </div>
+    <button (click)="showVoiceModal = true" class="btn btn-voice btn-lg">
+      🎙️ REPORT USING VOICE
+    </button>
+  </div>
+
+  <!-- Large Action Grid for High Accessibility -->
+  <div class="grid-2 action-grid">
+    <a routerLink="/report" class="action-card primary-card">
+      <div class="action-card-icon">📝</div>
+      <h2>REPORT A PROBLEM</h2>
+      <p>Submit text complaint, photo proof, address & location</p>
+    </a>
+
+    <a routerLink="/my-reports" class="action-card accent-card">
+      <div class="action-card-icon">📋</div>
+      <h2>MY REPORTS & TRACKING</h2>
+      <p>View complaint status timeline, before/after evidence & verification</p>
+    </a>
+
+    <div class="action-card info-card" (click)="showVoiceModal = true">
+      <div class="action-card-icon">🎙️</div>
+      <h2>VOICE REPORT</h2>
+      <p>Quick 1-tap microphone voice recording</p>
+    </div>
+
+    <a routerLink="/landing" class="action-card help-card">
+      <div class="action-card-icon">❓</div>
+      <h2>HELP & INFORMATION</h2>
+      <p>Learn how CivicAI routes issues to municipal departments</p>
+    </a>
+  </div>
+
+  <app-voice-report-modal
+    *ngIf="showVoiceModal"
+    (close)="showVoiceModal = false"
+    (complaintConfirmed)="onVoiceConfirmed($event)"
+  ></app-voice-report-modal>
+</div>

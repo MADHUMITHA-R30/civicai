@@ -1,0 +1,187 @@
+<div class="container detail-container" *ngIf="complaint; else loadingTpl">
+  <div class="header-bar">
+    <a routerLink="/my-reports" class="back-link">← Back to Reports</a>
+    <div class="header-meta">
+      <span class="complaint-id">{{ complaint.complaintNumber }}</span>
+      <span class="badge" [ngClass]="'badge-' + complaint.status.toLowerCase().replace('_', '-')">
+        {{ complaint.status }}
+      </span>
+    </div>
+  </div>
+
+  <div class="grid-2 detail-grid">
+    <!-- Left Column: Details & Images -->
+    <div class="left-col">
+      <div class="glass-card main-info-card">
+        <div class="category-header">
+          <h2>{{ complaint.categoryName }}</h2>
+          <span class="prio-tag" [ngClass]="'badge-' + complaint.priority.toLowerCase()">
+            Priority: {{ complaint.priority }} ({{ complaint.priorityScore }}/100)
+          </span>
+        </div>
+
+        <div class="info-group">
+          <label>Problem Description:</label>
+          <p class="desc">{{ complaint.description }}</p>
+        </div>
+
+        <div class="info-group">
+          <label>📍 Address / Location:</label>
+          <p>{{ complaint.address }}</p>
+        </div>
+
+        <div class="info-group">
+          <label>👤 Citizen Contact:</label>
+          <p>{{ complaint.citizenName }} ({{ complaint.contactNumber || complaint.citizenMobile }})</p>
+        </div>
+
+        <div class="original-photo-box" *ngIf="complaint.originalMediaPaths.length > 0">
+          <label>📸 Citizen Uploaded Photograph:</label>
+          <img [src]="complaint.originalMediaPaths[0]" alt="Reported issue photo" class="original-img" />
+        </div>
+      </div>
+
+      <!-- Before/After Resolution Box -->
+      <div *ngIf="complaint.resolution" class="glass-card resolution-box">
+        <h3 class="res-title">✨ Department Resolution Proof</h3>
+        <p class="res-msg">{{ complaint.resolution.resolutionMessage }}</p>
+        <p class="res-meta">Resolved by <strong>{{ complaint.resolution.resolvedByName }}</strong> ({{ complaint.resolution.resolvedByDepartment }}) on {{ complaint.resolution.resolvedAt | date:'dd MMM yyyy, hh:mm a' }}</p>
+
+        <!-- Interactive Before/After Comparison Component -->
+        <app-before-after-slider
+          [beforeImage]="complaint.originalMediaPaths[0]"
+          [afterImage]="complaint.resolution.afterMediaPaths[0]"
+        ></app-before-after-slider>
+
+        <!-- Citizen Verification Action Box -->
+        <div class="verification-action-box" *ngIf="complaint.status === 'RESOLVED' && auth.currentUser()?.id === complaint.citizenId">
+          <h4>Was this issue actually resolved?</h4>
+          <p>Please inspect the before/after proof above and confirm.</p>
+          <div class="verify-btns">
+            <button (click)="openVerification(true)" class="btn btn-accent">
+              ✓ YES, RESOLVED PROPERLY
+            </button>
+            <button (click)="openVerification(false)" class="btn btn-danger">
+              ❌ NO, ISSUE NOT RESOLVED (DISPUTE)
+            </button>
+          </div>
+        </div>
+
+        <div class="verified-status-banner" *ngIf="complaint.status === 'VERIFIED'">
+          ✅ Citizen Verified: "Resolution confirmed by citizen"
+        </div>
+
+        <div class="disputed-status-banner" *ngIf="complaint.status === 'RESOLUTION_DISPUTED'">
+          ⚠️ Resolution Disputed by Citizen: Feedback logged. Under re-investigation by department.
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: AI Insights & Status Timeline -->
+    <div class="right-col">
+      <!-- AI Analysis Insight Card -->
+      <div class="glass-card ai-insight-card" *ngIf="complaint.aiAnalysis">
+        <div class="ai-header">
+          <div class="ai-bot-icon">🤖</div>
+          <h3>AI Intelligence Analysis</h3>
+        </div>
+
+        <div class="ai-row">
+          <span>Assigned Department:</span>
+          <strong>{{ complaint.departmentName }}</strong>
+        </div>
+        <div class="ai-row">
+          <span>AI Severity Prediction:</span>
+          <span class="badge" [ngClass]="'badge-' + complaint.aiAnalysis.severity.toLowerCase()">{{ complaint.aiAnalysis.severity }}</span>
+        </div>
+        <div class="ai-row">
+          <span>Explainable Priority Score:</span>
+          <strong>{{ complaint.priorityScore }}/100</strong>
+        </div>
+
+        <div class="ai-reasons-box">
+          <label>Why this priority?</label>
+          <p>{{ complaint.aiAnalysis.priorityExplanation }}</p>
+        </div>
+
+        <div class="ai-row" *ngIf="complaint.clusterReference">
+          <span>Linked Issue Cluster:</span>
+          <span class="badge badge-duplicate">{{ complaint.clusterReference }} ({{ complaint.clusterReportCount }} reports)</span>
+        </div>
+      </div>
+
+      <!-- Complaint Status Lifecycle Timeline -->
+      <div class="glass-card timeline-card">
+        <h3>📍 Complaint Status Lifecycle</h3>
+
+        <div class="timeline">
+          <div class="timeline-item" [class.completed]="true">
+            <div class="t-icon">●</div>
+            <div class="t-content">
+              <h4>Complaint Submitted</h4>
+              <p>{{ complaint.createdAt | date:'dd MMM, hh:mm a' }}</p>
+            </div>
+          </div>
+
+          <div class="timeline-item" [class.completed]="complaint.status !== 'SUBMITTED'">
+            <div class="t-icon">●</div>
+            <div class="t-content">
+              <h4>AI Analyzed & Classified</h4>
+              <p>Routed to {{ complaint.departmentName }}</p>
+            </div>
+          </div>
+
+          <div class="timeline-item" [class.completed]="complaint.status === 'IN_PROGRESS' || complaint.status === 'RESOLVED' || complaint.status === 'VERIFIED'">
+            <div class="t-icon">●</div>
+            <div class="t-content">
+              <h4>Repair In Progress</h4>
+              <p>Official assigned & work underway</p>
+            </div>
+          </div>
+
+          <div class="timeline-item" [class.completed]="complaint.status === 'RESOLVED' || complaint.status === 'VERIFIED'">
+            <div class="t-icon">●</div>
+            <div class="t-content">
+              <h4>Work Resolved & Photo Uploaded</h4>
+              <p>Resolution proof verified</p>
+            </div>
+          </div>
+
+          <div class="timeline-item" [class.completed]="complaint.status === 'VERIFIED'">
+            <div class="t-icon">●</div>
+            <div class="t-content">
+              <h4>Citizen Verified</h4>
+              <p>Closed with citizen satisfaction</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verification Modal -->
+  <div *ngIf="showVerifyModal" class="modal-overlay">
+    <div class="modal-content verify-modal">
+      <h2>{{ isResolvedAnswer ? '✓ Verify Resolution' : '⚠️ Dispute Resolution' }}</h2>
+      <p>{{ isResolvedAnswer ? 'Are you satisfied with the repair work completed by the department?' : 'Please tell us why the problem is not fixed so officials can reopen the issue:' }}</p>
+
+      <div class="form-group">
+        <label>Citizen Feedback Notes:</label>
+        <textarea [(ngModel)]="feedbackText" rows="3" class="form-control" placeholder="Enter comments or additional details..."></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button (click)="submitVerification()" class="btn" [ngClass]="isResolvedAnswer ? 'btn-accent' : 'btn-danger'">
+          Confirm & Submit
+        </button>
+        <button (click)="showVerifyModal = false" class="btn btn-outline">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="container text-center py-5">
+    <h3>Loading Complaint Details...</h3>
+  </div>
+</ng-template>

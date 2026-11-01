@@ -1,0 +1,45 @@
+{
+  "name": "civicai-frontend",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^20.0.0",
+    "@angular/compiler": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/forms": "^20.0.0",
+    "@angular/platform-browser": "^20.0.0",
+    "@angular/router": "^20.0.0",
+    "rxjs": "^7.8.2",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/architect": "^0.2102.23",
+    "@angular-devkit/core": "^21.2.23",
+    "@angular-devkit/schematics": "^21.2.23",
+    "@angular/build": "^20.3.36",
+    "@angular/cli": "^20.3.36",
+    "@angular/compiler-cli": "^20.3.30",
+    "@babel/core": "^7.29.7",
+    "@babel/types": "^8.0.4",
+    "@types/jasmine": "~5.1.0",
+    "ajv": "^8.20.0",
+    "ajv-keywords": "^5.1.0",
+    "browserslist": "^4.28.9",
+    "caniuse-lite": "^1.0.30001810",
+    "jasmine-core": "~5.7.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.8.2"
+  }
+}

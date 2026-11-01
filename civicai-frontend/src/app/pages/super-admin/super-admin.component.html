@@ -1,0 +1,65 @@
+<div class="container sa-container">
+  <div class="page-header">
+    <span class="sa-badge">SYSTEM SUPER ADMIN CONSOLE</span>
+    <h1>⚙️ Municipal Platform Administration</h1>
+    <p>Manage municipal departments, officials, citizen reliability risk scores, and unblock accounts.</p>
+  </div>
+
+  <!-- Departments Management -->
+  <div class="glass-card mb-4">
+    <h3>🏢 Municipal Departments ({{ departments.length }})</h3>
+    <div class="grid-3 dept-grid">
+      <div *ngFor="let d of departments" class="dept-card">
+        <div class="dept-code">{{ d.code }}</div>
+        <h4>{{ d.name }}</h4>
+        <p>{{ d.description }}</p>
+        <span class="badge badge-verified">ACTIVE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Citizen User Management & Block / Unblock -->
+  <div class="glass-card">
+    <h3>👥 Citizen Reliability & Account Control</h3>
+    <table class="data-table mt-3">
+      <thead>
+        <tr>
+          <th>Citizen ID & Name</th>
+          <th>Mobile Phone</th>
+          <th>Submitted Reports</th>
+          <th>Verified / False</th>
+          <th>Risk Score Level</th>
+          <th>Account Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of citizens">
+          <td><strong>{{ c.name }}</strong> (ID #{{ c.id }})</td>
+          <td>{{ c.mobile }}</td>
+          <td>{{ c.total }} Reports</td>
+          <td>
+            <span class="text-success">{{ c.verified }} Verified</span> /
+            <span class="text-danger">{{ c.falseCount }} False</span>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="'badge-' + c.risk.toLowerCase()">{{ c.risk }}</span>
+          </td>
+          <td>
+            <span class="badge" [class.badge-verified]="c.status === 'ACTIVE'" [class.badge-disputed]="c.status === 'BLOCKED'">
+              {{ c.status }}
+            </span>
+          </td>
+          <td>
+            <button *ngIf="c.status === 'BLOCKED'" (click)="unblockUser(c)" class="btn btn-accent btn-sm">
+              🔓 UNBLOCK CITIZEN
+            </button>
+            <button *ngIf="c.status === 'ACTIVE'" (click)="blockUser(c)" class="btn btn-danger btn-sm">
+              🚫 BLOCK
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

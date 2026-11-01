@@ -1,0 +1,29 @@
+<div class="ba-comparison-wrapper">
+  <div class="ba-header">
+    <div class="ba-tag before-tag">📸 {{ beforeLabel }}</div>
+    <div class="ba-tag after-tag">✨ {{ afterLabel }}</div>
+  </div>
+
+  <div class="ba-slider-container">
+    <!-- After Image (Background) -->
+    <img [src]="afterImage || 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop'" class="ba-img after-img" alt="After resolution" />
+
+    <!-- Before Image (Clipped Foreground) -->
+    <div class="ba-before-wrapper" [style.width.%]="sliderPosition">
+      <img [src]="beforeImage || 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?w=600&auto=format&fit=crop'" class="ba-img before-img" alt="Before issue" />
+    </div>
+
+    <!-- Divider Bar & Handle -->
+    <div class="ba-handle" [style.left.%]="sliderPosition">
+      <div class="handle-line"></div>
+      <div class="handle-circle">↔</div>
+    </div>
+
+    <!-- Range Input Control -->
+    <input type="range" min="0" max="100" [value]="sliderPosition" (input)="onSliderChange($event)" class="ba-range-input" />
+  </div>
+
+  <div class="ba-footer-hint">
+    <span>👈 Drag slider to compare Before & After proof 👉</span>
+  </div>
+</div>

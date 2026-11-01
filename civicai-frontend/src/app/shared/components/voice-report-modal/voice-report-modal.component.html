@@ -1,0 +1,80 @@
+<div class="modal-overlay">
+  <div class="modal-content voice-modal">
+    <button class="close-btn" (click)="close.emit()">✕</button>
+
+    <!-- State 1: Recording Interface -->
+    <div *ngIf="!showConfirmation" class="recording-container">
+      <div class="modal-header-icon">🎙️</div>
+      <h2>Report Civic Issue by Voice</h2>
+      <p class="subtitle">Press the microphone button and speak your problem naturally in simple words.</p>
+
+      <div class="mic-wrapper" [class.recording-active]="isRecording">
+        <button class="mic-button" (click)="isRecording ? stopRecording() : startRecording()" [disabled]="isProcessing">
+          <span *ngIf="!isRecording && !isProcessing">🎙️</span>
+          <span *ngIf="isRecording">⏹️</span>
+          <span *ngIf="isProcessing">⏳</span>
+        </button>
+      </div>
+
+      <div class="status-indicator">
+        <span *ngIf="!isRecording && !isProcessing" class="hint-text">Tap microphone to start speaking</span>
+        <span *ngIf="isRecording" class="recording-status">
+          <span class="pulse-dot"></span> Recording Live: {{ recordingTime }}s (Tap ⏹️ when finished)
+        </span>
+        <span *ngIf="isProcessing" class="processing-status">
+          🤖 AI is transcribing voice & extracting complaint details...
+        </span>
+      </div>
+
+      <div class="sample-prompt">
+        <p class="prompt-title">💡 Example spoken complaint:</p>
+        <p class="prompt-text">"My street light is not working near RMK college main road. My phone number is 9876543210."</p>
+      </div>
+    </div>
+
+    <!-- State 2: AI Extracted Confirmation Screen -->
+    <div *ngIf="showConfirmation" class="confirmation-container">
+      <div class="confirmation-badge">✓ AI EXTRACTED REPORT</div>
+      <h2>PLEASE CONFIRM YOUR REPORT</h2>
+      <p class="confirmation-subtitle">AI processed your voice input. Please review and confirm the extracted details below before submitting:</p>
+
+      <div class="extracted-card">
+        <div class="form-group">
+          <label>Issue Category:</label>
+          <select [(ngModel)]="extractedData.categoryId" class="form-control">
+            <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Location / Address:</label>
+          <input type="text" [(ngModel)]="extractedData.address" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Contact Phone Number:</label>
+          <input type="text" [(ngModel)]="extractedData.contactNumber" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Complaint Description:</label>
+          <textarea [(ngModel)]="extractedData.description" rows="3" class="form-control"></textarea>
+        </div>
+
+        <div class="ai-meta-pills">
+          <span class="pill">Assigned Department: <strong>{{ extractedData.department }}</strong></span>
+          <span class="pill">Estimated Severity: <strong>{{ extractedData.severity }}</strong></span>
+        </div>
+      </div>
+
+      <div class="confirmation-actions">
+        <button class="btn btn-accent btn-lg flex-1" (click)="confirmReport()">
+          ✓ CONFIRM & SUBMIT REPORT
+        </button>
+        <button class="btn btn-outline" (click)="showConfirmation = false">
+          ✏️ Edit / Record Again
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

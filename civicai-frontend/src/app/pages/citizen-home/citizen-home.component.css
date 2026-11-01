@@ -1,0 +1,60 @@
+.citizen-home-container {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+.welcome-header {
+  margin-bottom: 2rem;
+}
+
+.welcome-header h1 {
+  font-size: 2.4rem;
+}
+
+.welcome-header p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+.voice-banner {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  border-radius: var(--radius-xl);
+  padding: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.25);
+  flex-wrap: wrap;
+}
+
+.voice-banner-content h2 {
+  color: white;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.voice-banner-content p {
+  color: #e0e7ff;
+  font-size: 1.05rem;
+}
+
+.action-grid {
+  gap: 1.75rem;
+}
+
+.action-card h2 {
+  font-size: 1.45rem;
+  margin-bottom: 0.5rem;
+}
+
+.action-card p {
+  color: var(--text-muted);
+}
+
+.primary-card .action-card-icon { background: #eff6ff; color: #2563eb; }
+.accent-card .action-card-icon { background: #d1fae5; color: #059669; }
+.info-card .action-card-icon { background: #f3e8ff; color: #7c3aed; cursor: pointer; }
+.help-card .action-card-icon { background: #fef3c7; color: #d97706; }
